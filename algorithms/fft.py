@@ -37,21 +37,22 @@ def farthest_first(selected_ids: list[int] = [], k: int = 400) -> list[str]:
     if len(selected_ids) == 0:
         np.random.seed(42)
         selected_ids = [np.random.randint(0, index.shape[0])]     # type: ignore
-    for _ in tqdm.tqdm(range(k)):                
-        if len(selected_ids) == 1:
-            distances = dist_matrix[selected_ids[-1]] # type: ignore - Get the only element in the selected_ids array
-            next_id = np.argmax(distances) # type: ignore
-            selected_ids.append(next_id)
-        else:
-            candidates = list()            
-            for id in range(index.shape[0]): #type: ignore
-                if id in selected_ids:
-                    continue                                                            
-                distances = dist_matrix[id, selected_ids] #type: ignore
-                min_distance = np.min(distances) #type: ignore               
-                candidates.append((id, min_distance))            
-            next_id = max(candidates, key=lambda x: x[1])[0]
-            selected_ids.append(next_id)
+    else:
+        matrix_ids = [np.where(selected_ids == id)[0][0] for id in selected_ids]
+    if len(selected_ids) == 1:
+        distances = dist_matrix[selected_ids[-1]] # type: ignore - Get the only element in the selected_ids array
+        next_id = np.argmax(distances) # type: ignore
+        selected_ids.append(next_id)    
+    for _ in tqdm.tqdm(range(k)):                        
+        candidates = list()            
+        for id in range(index.shape[0]): #type: ignore
+            if id in selected_ids:
+                continue                                                            
+            distances = dist_matrix[id, selected_ids] #type: ignore
+            min_distance = np.min(distances) #type: ignore               
+            candidates.append((id, min_distance))            
+        next_id = max(candidates, key=lambda x: x[1])[0]
+        selected_ids.append(next_id)
     actual_ids = [index[id] for id in selected_ids] #type: ignore
     return actual_ids #type: ignore
 
