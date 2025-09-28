@@ -1,0 +1,17 @@
+- To enable custom endpoints, remember to set the docker-compose.override.yaml
+- For Azure AI studio, once librechat.yaml has been set by the above, enter the following credentials:
+
+azureOpenAI:        
+    groups:
+    - group: <group_name>
+      apiKey: <api_key>
+      version: <api_version>             
+      summarize: true    
+      titleConvo: true
+      titleMethod: "functions"
+      baseURL: <custom_endpoint_url
+      plugins: true
+      serverless: true          
+      models:
+        gpt-4.1:
+          deploymentName: "gpt-4.1"             
